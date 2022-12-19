@@ -9,4 +9,37 @@ class Data_barang Extends CI_Controller{
         $this->load->view('admin/data_barang', $data);
         $this->load->view('templates_admin/footer');
     }
+
+    public function tambah_aksi()
+    {
+        $nama_brg       =$this->input->post('nama_brg');
+        $keterangan     =$this->input->post('keterangan');
+        $kategori       =$this->input->post('kategori');
+        $harga          =$this->input->post('harga');
+        $stok           =$this->input->post('stok');
+        $gambar_brg     =$_FILES['gambar_brg']['name'];
+        if ($gambar_brg =''){}else{
+            $config ['upload_path'] = './uploads';
+            $config ['allowed_type'] = 'jpg|jpeg|png|gif';
+
+            $this->load->library('upload', $sonfig);
+            if(!$this->upload->do_upload('gambar_brg')){
+                echo "Gambar Gagal diUpload!";
+            }else{
+                $gambar_brg=$this->upload->data('file_name');
+            }
+        }
+
+        $data = array (
+            'nama_brg'          => $nama_brg,
+            'keterangan'        => $keterangan,
+            'kategori'          => $kategori,
+            'harga'             => $harga,
+            'stok'              => $stok,
+            'gambar_brg'        => $gambar_brg
+        );
+
+        $this->model_barang->tambah_barang($data, 'tb_barang');
+        redirect('admin/data_barang/index');
+    }
 }
